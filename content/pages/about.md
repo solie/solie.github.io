@@ -1,0 +1,9 @@
+title: About
+date: 2019-05-24
+
+
+Hi, I am solie and I wrote this epic collection of Interweb
+wisdom. In days of yore, much of this would have been deemed sorcery
+and I would probably have been burned at the stake.
+
+😆
