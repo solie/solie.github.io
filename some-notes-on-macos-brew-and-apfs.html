@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>Some Notes on MacOS, brew and APFS</title>
+        <link rel="stylesheet" href="/theme/css/main.css" />
+        <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="maz_solie's place Atom Feed" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">maz_solie's place </a></h1>
+                <nav><ul>
+                    <li><a href="/pages/about.html">About</a></li>
+                    <li class="active"><a href="/category/misc.html">misc</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="/some-notes-on-macos-brew-and-apfs.html" rel="bookmark"
+           title="Permalink to Some Notes on MacOS, brew and APFS">Some Notes on MacOS, brew and APFS</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2018-08-27T09:59:15+08:00">
+                Published: Mon 27 August 2018
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/maz_solie.html">maz_solie</a>
+        </address>
+<p>In <a href="/category/misc.html">misc</a>.</p>
+
+</footer><!-- /.post-info -->      <p><code>Brew</code> is the de facto package manager for macOS, especially for a developer. Most of the time we just do <code>brew update &amp;&amp; brew upgrade</code> and quickly <code>brew cleanup</code> after those routine. Rarely we have no problem of doing that, i.e updating the software to the latest stable version.</p>
+<p>Sometimes, we just need to revert back to the old version, as there are one or two libraries which are not ready yet for the latest version. For example, here I have the latest python 3.7, in which many of my libs are not there yet. So, how to go back to python 3.6?</p>
+<p>If you don't cleanup the brew yet, you can just run <code>brew switch python 3.6.5_1</code>. Usually we have no reason to keep old software around when we already have the new one. For that case, we need to install the old first, and then do the switch:</p>
+<p><code>brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/f2a764ef944b1080be64bd88dca9a1d80130c558/Formula/python.r</code> and then <code>brew switch python 3.6.5_1</code>.</p>
+<p>You can find more on the brew tips and trick right from <a href="https://docs.brew.sh/Tips-N'-Tricks">the website</a>.</p>
+<p>Second thing I recently have is apfs partition problem. I have two or three operating system in my laptop, so it's common for me to resize and redistribute the free space among those OSes. The only problem is APFS sometimes just refuse to boot after this resize from third party partition tools. If we check the partition info, sometimes the APFS partition type changed to windows recovery, which is why the macOS booter just show the cool stop sign, as it couldn't find the location of the bootstraps files.</p>
+<p>So, to resolve this partition type changing, we need to delete that partition, and re-add the same exact partition with its beginning location and size and the correct partition type.</p>
+<p>Note that we can do this only from another disk, or via USB macos Installer, or macos recovery.</p>
+<p>First, we need to list the partition of the disk: <code>gpt -r show /dev/disk1</code> (you can change the disk1 to your actual disk).</p>
+<p>Next, remove the partition and re-add it: 
+- <code>gpt remove -i 2 /dev/disk1</code> (second partition)
+- <code>diskutil unmountDisk /dev/disk1</code>
+- <code>gpt add -i 2 -b &lt;beginning of the sector&gt; -s &lt;part size&gt; -t 7C3457EF-0000-11AA-AA11-00306543ECAC /dev/disk1</code> 
+- <code>diskutil verifyVolume /dev/disk1s2</code></p>
+<p>Then we can just continue to boot to that APFS partition. </p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="http://getpelican.com/">Pelican</a></li>
+                            <li><a href="http://python.org/">Python.org</a></li>
+                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                            <li><a href="#">You can modify those links in your config file</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                            <li><a href="#">You can add links in your config file</a></li>
+                            <li><a href="#">Another social link</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>
